@@ -1,6 +1,6 @@
-function Header() {
+function Header({ brewCount }) {
     return (
-        <h1>Brews: 0</h1>
+        <h1 className="mb-0">Brews: {brewCount}</h1>
     );
 }
 
