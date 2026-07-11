@@ -1,28 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import AddButton from "./components/AddButton";
 import FilterDropdown from "./components/FilterDropdown";
 import BrewList from "./components/BrewList";
+import { getBrews } from "./services/api";
 
 function App() {
-  const [brews] = useState([
-    {
-      id: 1,
-      beans: "Ethiopian Yirgacheffe",
-      method: "Pour Over",
-      coffee_grams: 18,
-      water_grams: 300,
-      rating: 5,
-    },
-    {
-      id: 2,
-      beans: "Colombian Supremo",
-      method: "French Press",
-      coffee_grams: 22,
-      water_grams: 350,
-      rating: 4,
-    },
-  ]);
+  const [brews, setBrews] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadBrews = async () => {
+      try {
+        const data = await getBrews();
+        setBrews(data);
+      } catch (requestError) {
+        console.error("Failed to load brews:", requestError);
+        setError("Unable to load brews. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadBrews();
+  }, []);
 
   return (
     <div className="container py-5">
@@ -35,7 +37,15 @@ function App() {
         <FilterDropdown />
       </div>
 
-      <BrewList brews={brews} />
+      {isLoading && <p className="text-muted">Loading brews...</p>}
+
+      {error && (
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+      )}
+
+      {!isLoading && !error && <BrewList brews={brews} />}
     </div>
   );
 }
