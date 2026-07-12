@@ -13,7 +13,9 @@ function BrewForm({
   initialValues = initialFormData,
   onSubmit,
   onCancel,
+  onDelete,
   isSaving,
+  isDeleting = false,
   serverError,
   submitLabel = "Save",
 })  {
@@ -170,19 +172,36 @@ function BrewForm({
         />
       </div>
 
-      <div className="d-flex gap-2">
-        <button type="submit" className="btn btn-primary" disabled={isSaving}>
-          {isSaving ? "Saving..." : submitLabel}
-        </button>
+      <div className="d-flex justify-content-between align-items-center gap-3">
+        <div className="d-flex gap-2">
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={isSaving || isDeleting}
+          >
+            {isSaving ? "Saving..." : submitLabel}
+          </button>
 
-        <button
-          type="button"
-          className="btn btn-outline-secondary"
-          onClick={onCancel}
-          disabled={isSaving}
-        >
-          Cancel
-        </button>
+          <button
+            type="button"
+            className="btn btn-outline-secondary"
+            onClick={onCancel}
+            disabled={isSaving || isDeleting}
+          >
+            Cancel
+          </button>
+        </div>
+
+        {onDelete && (
+          <button
+            type="button"
+            className="btn btn-danger"
+            onClick={onDelete}
+            disabled={isSaving || isDeleting}
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </button>
+        )}
       </div>
     </form>
   );

@@ -25,4 +25,8 @@ export const updateBrew = async (brewId, brewData) => {
   return response.data;
 };
 
+export const deleteBrew = async (brewId) => {
+  await api.delete(`/brews/${brewId}/`);
+};
+
 export default api;

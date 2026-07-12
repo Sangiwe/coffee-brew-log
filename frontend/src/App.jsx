@@ -55,6 +55,15 @@ const handleBrewUpdated = (updatedBrew) => {
   setCurrentView("list");
 };
 
+const handleBrewDeleted = (deletedBrewId) => {
+  setBrews((currentBrews) =>
+    currentBrews.filter((brew) => brew.id !== deletedBrewId),
+  );
+
+  setSelectedBrew(null);
+  setCurrentView("list");
+};
+
   if (currentView === "add") {
     return (
       <AddBrew
@@ -69,6 +78,7 @@ const handleBrewUpdated = (updatedBrew) => {
     <EditBrew
       brew={selectedBrew}
       onBrewUpdated={handleBrewUpdated}
+      onBrewDeleted={handleBrewDeleted}
       onCancel={() => {
         setSelectedBrew(null);
         setCurrentView("list");

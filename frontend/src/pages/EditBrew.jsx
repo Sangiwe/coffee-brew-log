@@ -1,9 +1,15 @@
 import { useState } from "react";
 import BrewForm from "../components/BrewForm";
-import { updateBrew } from "../services/api";
+import { deleteBrew, updateBrew } from "../services/api";
 
-function EditBrew({ brew, onBrewUpdated, onCancel }) {
+function EditBrew({
+  brew,
+  onBrewUpdated,
+  onBrewDeleted,
+  onCancel,
+})  {
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [serverError, setServerError] = useState("");
 
   const handleUpdate = async (formData) => {
@@ -28,6 +34,29 @@ function EditBrew({ brew, onBrewUpdated, onCancel }) {
     }
   };
 
+  const handleDelete = async () => {
+  const confirmed = window.confirm(
+    `Delete the brew made with "${brew.beans}"?`,
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    setIsDeleting(true);
+    setServerError("");
+
+    await deleteBrew(brew.id);
+    onBrewDeleted(brew.id);
+  } catch (error) {
+    console.error("Failed to delete brew:", error);
+    setServerError("The brew could not be deleted. Please try again.");
+  } finally {
+    setIsDeleting(false);
+  }
+};
+
   return (
     <div className="container py-5">
       <div className="mx-auto" style={{ maxWidth: "700px" }}>
@@ -44,7 +73,9 @@ function EditBrew({ brew, onBrewUpdated, onCancel }) {
           }}
           onSubmit={handleUpdate}
           onCancel={onCancel}
-          isSaving={isSaving}
+          onDelete={handleDelete}
+          isSaving={isSaving }
+          isDeleting={isDeleting}
           serverError={serverError}
           submitLabel="Save"
         />
