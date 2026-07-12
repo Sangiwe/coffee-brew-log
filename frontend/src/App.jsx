@@ -5,10 +5,12 @@ import FilterDropdown from "./components/FilterDropdown";
 import BrewList from "./components/BrewList";
 import AddBrew from "./pages/AddBrew";
 import { getBrews } from "./services/api";
+import EditBrew from "./pages/EditBrew";
 
 function App() {
   const [brews, setBrews] = useState([]);
   const [currentView, setCurrentView] = useState("list");
+  const [selectedBrew, setSelectedBrew] = useState(null);
   const [selectedMethod, setSelectedMethod] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -37,6 +39,22 @@ function App() {
     setCurrentView("list");
   };
 
+  const handleEditClick = (brew) => {
+  setSelectedBrew(brew);
+  setCurrentView("edit");
+};
+
+const handleBrewUpdated = (updatedBrew) => {
+  setBrews((currentBrews) =>
+    currentBrews.map((brew) =>
+      brew.id === updatedBrew.id ? updatedBrew : brew,
+    ),
+  );
+
+  setSelectedBrew(null);
+  setCurrentView("list");
+};
+
   if (currentView === "add") {
     return (
       <AddBrew
@@ -45,6 +63,19 @@ function App() {
       />
     );
   }
+
+  if (currentView === "edit" && selectedBrew) {
+  return (
+    <EditBrew
+      brew={selectedBrew}
+      onBrewUpdated={handleBrewUpdated}
+      onCancel={() => {
+        setSelectedBrew(null);
+        setCurrentView("list");
+      }}
+    />
+  );
+}
 
   return (
     <div className="container py-5">
@@ -68,7 +99,7 @@ function App() {
         </div>
       )}
 
-      {!isLoading && !error && <BrewList brews={brews} />}
+      {!isLoading && !error && <BrewList brews={brews} onEdit={handleEditClick} />}
     </div>
   );
 }

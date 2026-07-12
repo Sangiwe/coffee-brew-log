@@ -9,8 +9,15 @@ const initialFormData = {
   tasting_notes: "",
 };
 
-function BrewForm({ onSubmit, onCancel, isSaving, serverError }) {
-  const [formData, setFormData] = useState(initialFormData);
+function BrewForm({
+  initialValues = initialFormData,
+  onSubmit,
+  onCancel,
+  isSaving,
+  serverError,
+  submitLabel = "Save",
+})  {
+  const [formData, setFormData] = useState(initialValues);
   const [validationError, setValidationError] = useState("");
 
   const handleChange = (event) => {
@@ -165,7 +172,7 @@ function BrewForm({ onSubmit, onCancel, isSaving, serverError }) {
 
       <div className="d-flex gap-2">
         <button type="submit" className="btn btn-primary" disabled={isSaving}>
-          {isSaving ? "Saving..." : "Save"}
+          {isSaving ? "Saving..." : submitLabel}
         </button>
 
         <button

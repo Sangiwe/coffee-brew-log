@@ -1,4 +1,4 @@
-function BrewCard({ brew }) {
+function BrewCard({ brew, onEdit }) {
   return (
     <div className="card mb-3 shadow-sm">
       <div className="card-body">
@@ -23,6 +23,7 @@ function BrewCard({ brew }) {
           <button
             type="button"
             className="btn btn-sm btn-outline-secondary"
+            onClick={() => onEdit(brew)}
           >
             Edit
           </button>

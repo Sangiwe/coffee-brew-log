@@ -20,4 +20,9 @@ export const createBrew = async (brewData) => {
   return response.data;
 };
 
+export const updateBrew = async (brewId, brewData) => {
+  const response = await api.put(`/brews/${brewId}/`, brewData);
+  return response.data;
+};
+
 export default api;
