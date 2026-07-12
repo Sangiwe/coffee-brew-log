@@ -9,24 +9,28 @@ import { getBrews } from "./services/api";
 function App() {
   const [brews, setBrews] = useState([]);
   const [currentView, setCurrentView] = useState("list");
+  const [selectedMethod, setSelectedMethod] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const loadBrews = async () => {
-      try {
-        const data = await getBrews();
-        setBrews(data);
-      } catch (requestError) {
-        console.error("Failed to load brews:", requestError);
-        setError("Unable to load brews. Please try again.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const loadBrews = async () => {
+    try {
+      setIsLoading(true);
+      setError("");
 
-    loadBrews();
-  }, []);
+      const data = await getBrews(selectedMethod);
+      setBrews(data);
+    } catch (requestError) {
+      console.error("Failed to load brews:", requestError);
+      setError("Unable to load brews. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  loadBrews();
+}, [selectedMethod]);
 
   const handleBrewCreated = (newBrew) => {
     setBrews((currentBrews) => [newBrew, ...currentBrews]);
@@ -50,7 +54,10 @@ function App() {
       </div>
 
       <div className="mb-4">
-        <FilterDropdown />
+        <FilterDropdown
+          selectedMethod={selectedMethod}
+          onMethodChange={setSelectedMethod}
+        />
       </div>
 
       {isLoading && <p className="text-muted">Loading brews...</p>}

@@ -7,8 +7,11 @@ const api = axios.create({
   },
 });
 
-export const getBrews = async () => {
-  const response = await api.get("/brews/");
+export const getBrews = async (method = "") => {
+  const response = await api.get("/brews/", {
+    params: method ? { method } : {},
+  });
+
   return response.data;
 };
 
