@@ -23,7 +23,7 @@ class Brew(models.Model):
             MaxValueValidator(5)
         ]
     )
-    tasting_notes = models.TextField(blank=True)
+    tasting_notes = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
