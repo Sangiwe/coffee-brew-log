@@ -3,10 +3,12 @@ import Header from "./components/Header";
 import AddButton from "./components/AddButton";
 import FilterDropdown from "./components/FilterDropdown";
 import BrewList from "./components/BrewList";
+import AddBrew from "./pages/AddBrew";
 import { getBrews } from "./services/api";
 
 function App() {
   const [brews, setBrews] = useState([]);
+  const [currentView, setCurrentView] = useState("list");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -26,11 +28,25 @@ function App() {
     loadBrews();
   }, []);
 
+  const handleBrewCreated = (newBrew) => {
+    setBrews((currentBrews) => [newBrew, ...currentBrews]);
+    setCurrentView("list");
+  };
+
+  if (currentView === "add") {
+    return (
+      <AddBrew
+        onBrewCreated={handleBrewCreated}
+        onCancel={() => setCurrentView("list")}
+      />
+    );
+  }
+
   return (
     <div className="container py-5">
       <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
         <Header brewCount={brews.length} />
-        <AddButton />
+        <AddButton onClick={() => setCurrentView("add")} />
       </div>
 
       <div className="mb-4">

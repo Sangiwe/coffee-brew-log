@@ -12,4 +12,9 @@ export const getBrews = async () => {
   return response.data;
 };
 
+export const createBrew = async (brewData) => {
+  const response = await api.post("/brews/", brewData);
+  return response.data;
+};
+
 export default api;
